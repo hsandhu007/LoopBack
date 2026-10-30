@@ -1,0 +1,110 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+  <meta name="theme-color" content="#111111">
+  <meta name="description" content="LOOPBACK helps you save it, remember it, and get it done.">
+  <link rel="manifest" href="manifest.webmanifest">
+  <link rel="icon" href="icon.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="styles.css">
+  <title>LOOPBACK — Save it. Remember it. Get it done.</title>
+</head>
+<body>
+  <div class="app-shell">
+    <aside class="sidebar">
+      <a class="brand" href="#" aria-label="LOOPBACK home">
+        <span class="brand-mark">↻</span><span>LOOPBACK</span>
+      </a>
+      <button class="nav-item active" data-view="inbox"><span>▤</span> Inbox <b id="inboxCount">0</b></button>
+      <button class="nav-item" data-view="today"><span>◷</span> Today <b id="todayCount">0</b></button>
+      <button class="nav-item" data-view="upcoming"><span>▦</span> Upcoming</button>
+      <button class="nav-item" data-view="completed"><span>✓</span> Completed</button>
+      <div class="sidebar-bottom">
+        <div class="storage-note"><span class="status-dot"></span><span>Saved on this device</span></div>
+        <button id="exportBtn" class="quiet-button">↓ Export my data</button>
+        <label class="quiet-button import-label">↑ Import backup<input id="importInput" type="file" accept="application/json" hidden></label>
+      </div>
+    </aside>
+
+    <main class="main">
+      <header class="topbar">
+        <div class="mobile-brand"><span class="brand-mark">↻</span> LOOPBACK</div>
+        <div class="topbar-right"><span class="local-label"><span class="status-dot"></span> Private · Local</span><button id="installBtn" class="install-btn" hidden>Install app</button></div>
+      </header>
+
+      <section class="page-heading">
+        <div>
+          <p class="eyebrow" id="eyebrow">YOUR PERSONAL FOLLOW-THROUGH SPACE</p>
+          <h1 id="viewTitle">Your inbox<span class="yellow-dot">.</span></h1>
+          <p class="subtitle" id="viewSubtitle">Everything you don't want to forget, in one place.</p>
+        </div>
+        <button class="primary-button" id="openCapture">＋ Capture</button>
+      </section>
+
+      <section class="capture-strip">
+        <button class="capture-option" data-type="note"><span class="capture-icon">✎</span><span><strong>Quick note</strong><small>Save a thought</small></span></button>
+        <button class="capture-option" data-type="task"><span class="capture-icon">✓</span><span><strong>New task</strong><small>Something to do</small></span></button>
+        <button class="capture-option" data-type="link"><span class="capture-icon">↗</span><span><strong>Save a link</strong><small>Keep it for later</small></span></button>
+        <button class="capture-option" data-type="image"><span class="capture-icon">▧</span><span><strong>Save an image</strong><small>Screenshot or photo</small></span></button>
+        <button class="capture-option" data-type="voice"><span class="capture-icon">♫</span><span><strong>Voice note</strong><small>Speak to capture</small></span></button>
+      </section>
+
+      <section class="toolbar">
+        <div class="search-wrap"><span>⌕</span><input id="searchInput" type="search" placeholder="Search your loops..." autocomplete="off"></div>
+        <div class="filter-wrap">
+          <button class="filter-button selected" data-filter="all">All</button>
+          <button class="filter-button" data-filter="task">Tasks</button>
+          <button class="filter-button" data-filter="note">Notes</button>
+          <button class="filter-button" data-filter="link">Links</button>
+          <button class="filter-button" data-filter="image">Images</button>
+          <button class="filter-button" data-filter="voice">Voice</button>
+        </div>
+      </section>
+
+      <section id="itemsGrid" class="items-grid" aria-live="polite"></section>
+      <section id="emptyState" class="empty-state">
+        <div class="empty-symbol">↻</div>
+        <h2>Your next great follow-through starts here.</h2>
+        <p>Save a thought, task, link or image. LOOPBACK will keep it safe on this device.</p>
+        <button class="primary-button" id="emptyCapture">＋ Capture your first loop</button>
+      </section>
+      <footer class="footer-note">LOOPBACK <span>·</span> Your life, followed through.</footer>
+    </main>
+  </div>
+
+  <nav class="mobile-nav">
+    <button class="active" data-view="inbox"><span>▤</span>Inbox</button>
+    <button data-view="today"><span>◷</span>Today</button>
+    <button data-view="upcoming"><span>▦</span>Upcoming</button>
+    <button data-view="completed"><span>✓</span>Done</button>
+  </nav>
+
+  <div class="modal-backdrop" id="captureModal" hidden>
+    <section class="modal" role="dialog" aria-modal="true" aria-labelledby="modalTitle">
+      <div class="modal-head"><div><p class="eyebrow">ADD TO YOUR LOOPBACK</p><h2 id="modalTitle">Capture something<span class="yellow-dot">.</span></h2></div><button class="close-button" id="closeModal" aria-label="Close">×</button></div>
+      <form id="captureForm">
+        <label class="field-label" for="itemTitle">Title</label>
+        <input id="itemTitle" class="field" maxlength="120" placeholder="What do you want to remember?" required>
+        <label class="field-label" for="itemType">Type</label>
+        <select id="itemType" class="field">
+          <option value="note">Note</option><option value="task">Task</option><option value="link">Link</option><option value="image">Image</option><option value="voice">Voice note</option>
+        </select>
+        <div id="linkField" hidden><label class="field-label" for="itemUrl">Website URL</label><input id="itemUrl" class="field" type="url" placeholder="https://example.com"></div>
+        <div id="imageField" hidden><label class="field-label" for="itemImage">Choose image / screenshot</label><input id="itemImage" class="field file-field" type="file" accept="image/*"></div>
+        <div id="voiceField" hidden class="voice-panel"><p id="voiceStatus">Voice capture is available in supported browsers.</p><button type="button" class="secondary-button" id="recordBtn">● Start speaking</button></div>
+        <label class="field-label" for="itemContent">Details <span class="optional">optional</span></label>
+        <textarea id="itemContent" class="field textarea" rows="4" placeholder="Add details, context or your voice transcription..."></textarea>
+        <div class="reminder-row">
+          <div><label class="field-label" for="reminderAt">Remind me</label><input id="reminderAt" class="field" type="datetime-local"></div>
+          <label class="check-label"><input id="isImportant" type="checkbox"> <span>Important</span></label>
+        </div>
+        <p class="privacy-hint">🔒 Your content is stored locally on this device in this first version.</p>
+        <div class="modal-actions"><button type="button" class="secondary-button" id="cancelModal">Cancel</button><button type="submit" class="primary-button">Save to LOOPBACK</button></div>
+      </form>
+    </section>
+  </div>
+  <div class="toast" id="toast" role="status"></div>
+  <script src="app.js"></script>
+</body>
+</html>

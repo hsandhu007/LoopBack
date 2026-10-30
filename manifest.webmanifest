@@ -1,0 +1,18 @@
+{
+  "name": "LOOPBACK \u2014 Save it. Remember it. Get it done.",
+  "short_name": "LOOPBACK",
+  "description": "Your personal follow-through space.",
+  "start_url": "./",
+  "scope": "./",
+  "display": "standalone",
+  "background_color": "#101112",
+  "theme_color": "#101112",
+  "icons": [
+    {
+      "src": "icon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    }
+  ]
+}
